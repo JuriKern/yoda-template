@@ -7,7 +7,7 @@ require('../scss/index.scss');
 
 var App = React.createClass({
   render: function() {
-    return <h1>Hello osx!</h1>;
+    return <h1>Hello web!</h1>;
   }
 });
 

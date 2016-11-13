@@ -1,13 +1,11 @@
 {
-  "name": "yoda-osx",
+  "name": "yoda-web",
   "version": "0.1.0",
-  "main": "src/main.js",
   "devDependencies": {
     "babel-core": "^6.18.0",
     "babel-loader": "^6.2.7",
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.25.0",
-    "electron-prebuilt": "^1.3.8",
     "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
@@ -19,7 +17,6 @@
     "react-dom": "^15.3.2"
   },
   "scripts": {
-    "start": "./node_modules/.bin/electron .",
-    "watch": "./node_modules/.bin/webpack-dev-server --hot --inline --port 3020"
+    "watch": "./node_modules/.bin/webpack-dev-server --hot --inline --port 3010"
   }
 }
