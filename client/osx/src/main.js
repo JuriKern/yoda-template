@@ -1,24 +1,19 @@
-"use strict"
-
 const {app, BrowserWindow} = require("electron");
 const {Menu, Tray} = require("electron");
 const path = require("path");
 
 let appWindow = null;
 let appTray = null;
-let quit = false;
 
-function createWindow () {	
+function createWindow () {
+	if (appWindow !== null) {
+		return false;
+	}
+
   appWindow = new BrowserWindow({ width: 800, height: 600 });
 	app.dock.show();
 
   appWindow.loadURL(`file://${__dirname}/index.html`);
-
-	// appWindow.on("minimize", (event) => {
-	// 	event.preventDefault();
-	// 	appWindow.hide();
-	// 	app.dock.hide();
-	// });
 
 	appWindow.on("close", (event) => {
 		if (!app.isQuiting) {
@@ -32,30 +27,51 @@ function createWindow () {
   appWindow.on("closed", () => {
   	appWindow = null;
   });
+
+	return true;
+}
+
+function showWindow() {
+	if (appWindow === null) {
+		return false;
+	}
+
+	if (!appWindow.isVisible()) {
+		appWindow.show();
+		app.dock.show();
+	}
+
+	return true;
 }
 
 function createTray() {
-	if (appTray === null) {
-		let iconPath = path.join(__dirname, "images/icon.png");
-		let contextMenu = Menu.buildFromTemplate([
-			{
-				label: "Show App",
-				click: function() {
+	if (appTray !== null) {
+		return false;
+	}
+
+	let iconPath = path.join(__dirname, "images/icon.png");
+	let contextMenu = Menu.buildFromTemplate([
+		{
+			label: "Show App",
+			click: function() {
+				if (!showWindow()) {
 					createWindow();
 				}
-			},
-			{
-				label: "Quit",
-				click: function() {
-					app.isQuiting = true;
-					app.quit();
-				}
 			}
-		]);
+		},
+		{
+			label: "Quit",
+			click: function() {
+				app.isQuiting = true;
+				app.quit();
+			}
+		}
+	]);
 
-		appTray = new Tray(iconPath);
-		appTray.setContextMenu(contextMenu);
-	}
+	appTray = new Tray(iconPath);
+	appTray.setContextMenu(contextMenu);
+
+	return true;
 }
 
 app.on("ready", () => {
@@ -70,9 +86,7 @@ app.on("window-all-closed", () => {
 });
 
 app.on("activate", () => {
-  if (appWindow === null) {
-    createWindow();
-  } else {
-  	appWindow.show();
-  }
+	if (!showWindow()) {
+		createWindow();
+	}
 });
